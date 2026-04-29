@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gasolina vs Álcool</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f4f0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+  .card { background: #fff; border-radius: 16px; padding: 2rem 1.5rem; width: 100%; max-width: 400px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  h1 { font-size: 18px; font-weight: 600; color: #1a1a1a; margin-bottom: 1.5rem; text-align: center; }
+  .field { margin-bottom: 1.25rem; }
+  label { display: block; font-size: 13px; color: #666; margin-bottom: 6px; }
+  input[type=number] { width: 100%; padding: 12px 14px; font-size: 18px; border: 1px solid #ddd; border-radius: 10px; outline: none; color: #1a1a1a; background: #fafafa; -moz-appearance: textfield; }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  input[type=number]:focus { border-color: #888; background: #fff; }
+  .result { margin-top: 1.75rem; border-top: 1px solid #eee; padding-top: 1.5rem; text-align: center; }
+  .result-label { font-size: 13px; color: #888; margin-bottom: 10px; }
+  .result-name { font-size: 42px; font-weight: 700; letter-spacing: 2px; margin-bottom: 8px; }
+  .result-pct { font-size: 14px; color: #888; }
+  .result-pct b { color: #333; }
+  .green { color: #1D9E75; }
+  .amber { color: #BA7517; }
+  .hint { font-size: 11px; color: #aaa; text-align: center; margin-top: 1.25rem; line-height: 1.5; }
+  #empty { font-size: 14px; color: #bbb; text-align: center; margin-top: 1.75rem; border-top: 1px solid #eee; padding-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>⛽ Gasolina vs Álcool</h1>
+  <div class="field">
+    <label for="gas">Preço da gasolina (R$/L)</label>
+    <input type="number" id="gas" placeholder="0,00" inputmode="decimal" step="0.01" min="0" oninput="calc()">
+  </div>
+  <div class="field">
+    <label for="alc">Preço do álcool (R$/L)</label>
+    <input type="number" id="alc" placeholder="0,00" inputmode="decimal" step="0.01" min="0" oninput="calc()">
+  </div>
+
+  <div id="empty">Preencha os dois campos para ver o resultado.</div>
+
+  <div class="result" id="result" style="display:none">
+    <p class="result-label">Mais vantajoso abastecer com</p>
+    <div class="result-name" id="rname"></div>
+    <p class="result-pct">Proporção álcool/gasolina: <b id="rpct"></b></p>
+  </div>
+
+  <p class="hint">Álcool compensa quando seu preço for ≤ 70% do preço da gasolina.</p>
+</div>
+<script>
+function calc() {
+  const g = parseFloat(document.getElementById('gas').value);
+  const a = parseFloat(document.getElementById('alc').value);
+  const res = document.getElementById('result');
+  const emp = document.getElementById('empty');
+  if (!g || !a || g <= 0 || a <= 0) { res.style.display='none'; emp.style.display='block'; return; }
+  const ratio = a / g;
+  document.getElementById('rpct').textContent = (ratio * 100).toFixed(1) + '%';
+  const nm = document.getElementById('rname');
+  if (ratio <= 0.7) { nm.textContent = 'ÁLCOOL'; nm.className = 'result-name green'; }
+  else { nm.textContent = 'GASOLINA'; nm.className = 'result-name amber'; }
+  res.style.display = 'block';
+  emp.style.display = 'none';
+}
+</script>
+</body>
+</html>
